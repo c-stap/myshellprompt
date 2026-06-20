@@ -90,7 +90,7 @@ fn get_git_status() -> (String, bool) {
         .ok()
         .and_then(|output| String::from_utf8(output.stdout).ok())
         .map(|s| s.trim().to_string())
-        .unwrap_or_else(|| "".to_string());
+        .unwrap_or_default();
 
     if branch.is_empty() {
         return ("".to_string(), true);
@@ -101,27 +101,44 @@ fn get_git_status() -> (String, bool) {
         .output()
         .ok()
         .and_then(|output| String::from_utf8(output.stdout).ok())
-        .unwrap_or_else(|| "".to_string());
+        .unwrap_or_default();
 
-    let has_unstaged = status.contains("??") || status.lines().any(|line| line.starts_with(" M") || line.starts_with(" D") || line.starts_with("A "));
-    let has_staged = status.lines().any(|line| line.starts_with("M ") || line.starts_with("D ") || line.starts_with("A "));
+    // Check for unstaged changes (including untracked files)
+    let has_unstaged = status.lines().any(|line| {
+        line.starts_with(" M") ||  // Modified, not staged
+        line.starts_with(" D") ||  // Deleted, not staged
+        line.starts_with("A ") ||  // Added, staged (but this is staged, not unstaged)
+        line.starts_with("??") ||  // Untracked
+        line.starts_with("!!") ||  // Ignored
+        line.starts_with(" R") ||  // Renamed, not staged
+        line.starts_with(" C")     // Copied, not staged
+    });
 
+    // Check for staged changes
+    let has_staged = status.lines().any(|line| {
+        line.starts_with("M ") ||  // Modified, staged
+        line.starts_with("D ") ||  // Deleted, staged
+        line.starts_with("A ") ||  // Added, staged
+        line.starts_with("R ") ||  // Renamed, staged
+        line.starts_with("C ")     // Copied, staged
+    });
+
+    // Icon logic
     let icon = if has_unstaged && has_staged {
-        "󱇬󰦒"
+        "󱇬󰦒"  // Both staged and unstaged
     } else if has_unstaged {
-        "󰦒"
+        "󰦒"      // Only unstaged
     } else if has_staged {
-        "󱇬"
+        "󱇬"      // Only staged
     } else {
-        ""
+        ""         // Clean working directory
     };
 
-    let branch_str = format!(" {} {}", branch, icon);
+    let branch_str = format!("{} {}", branch, icon);
     let all_committed = status.is_empty();
 
     (branch_str, all_committed)
 }
-
 
 fn format_env_prompt(bg_color: &Color, fg_color: &Color, next_bg_color: &Color) -> String {
     let env_name = get_active_python_env();
