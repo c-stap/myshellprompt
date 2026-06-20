@@ -1,6 +1,7 @@
 use std::env;
 use std::path::Path;
 use std::process::Command;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 const RESET: &str = "\x1b[0m";
 const RESET_BG: &str = "\x1b[49m";
@@ -69,6 +70,17 @@ fn get_user_hostname() -> String {
     format!("{}@{}", user, hostname)
 }
 
+fn get_time() -> String {
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .expect("Time went backwards")
+        .as_secs();
+
+    let hours = (now % 86400) / 3600;
+    let minutes = (now % 3600) / 60;
+
+    format!("{:02}:{:02}", hours, minutes)
+}
 
 fn get_pwd() -> String {
     let current_dir = env::current_dir().unwrap_or_else(|_| Path::new("unknown").to_path_buf());
@@ -166,6 +178,15 @@ fn format_user_hostname_prompt(bg_color: &Color, fg_color: &Color, next_bg_color
     }
 }
 
+fn format_time_prompt(bg_color: &Color, fg_color: &Color, next_bg_color: &Color) -> String {
+    let time = get_time();
+    let fmt_txt = format!("{}{} {}", bg_color.bg, fg_color.fg, time);
+    let fmt_sep = format!("{}{}{}", bg_color.fg, next_bg_color.bg, RIGHT_SEMI_CIRCLE);
+
+    format!(" {}{}", fmt_txt, fmt_sep)
+}
+
+
 fn format_pwd_prompt(bg_color: &Color, fg_color: &Color, next_bg_color: &Color, git_prompt: &str) -> String {
     let pwd_str = get_pwd();
     let fmt_txt = format!("{}{}{}", bg_color.bg, fg_color.fg, pwd_str);
@@ -194,7 +215,7 @@ fn main() {
     let white = Color::new(255, 255, 255);
     let black = Color::new(0, 0, 0);
     let pink = Color::new(252, 167, 234);
-    // let magenta = Color::new(192, 153, 255);
+    let magenta = Color::new(192, 153, 255);
     let blue = Color::new(130, 170, 255);
     // let orange = Color::new(255, 150, 108);
     let yellow = Color::new(255, 199, 119);
@@ -205,12 +226,13 @@ fn main() {
     (git_str, all_committed) = get_git_status();
 
     let env_prompt = format_env_prompt(&white, &black, &pink);
-    let user_host_prompt = format_user_hostname_prompt(&pink, &black, &blue, &env_prompt);
+    let user_host_prompt = format_user_hostname_prompt(&pink, &black, &magenta, &env_prompt);
+    let time_prompt = format_time_prompt(&magenta, &black, &blue);
 
     let git_color: Color;
     if all_committed { git_color = green } else { git_color = yellow }
     let git_prompt = format_git_prompt(&git_str, &black, &git_color);
     let pwd_prompt = format_pwd_prompt(&blue, &black, &git_color, &git_prompt);
 
-    println!("{}{}{}{}{}", env_prompt, user_host_prompt, pwd_prompt, git_prompt, RESET)
+    println!("{}{}{}{}{}{}", env_prompt, user_host_prompt, time_prompt, pwd_prompt, git_prompt, RESET)
 }
