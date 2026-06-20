@@ -3,9 +3,9 @@ use std::path::Path;
 use std::process::Command;
 use chrono::Local;
 
-const RESET: &str = "\x1b[0m";
-const RESET_BG: &str = "\x1b[49m";
-// const RESET_FG: &str = "\x1b[39m";
+const RESET: &str = r"\[\e[0m\]";
+const RESET_BG: &str = r"\[\e[49m\]";
+// const RESET_FG: &str = "\e[39m";
 
 const LEFT_SEMI_CIRCLE: &str = "";
 const RIGHT_SEMI_CIRCLE: &str = "";
@@ -20,8 +20,8 @@ impl Color {
     fn new(r: u8, g: u8, b: u8) -> Self {
         Self {
             // rgb: (r, g, b),
-            fg: format!("\x1b[38;2;{};{};{}m", r, g, b),
-            bg: format!("\x1b[48;2;{};{};{}m", r, g, b),
+            fg: format!(r"\[\e[38;2;{};{};{}m\]", r, g, b),
+            bg: format!(r"\[\e[48;2;{};{};{}m\]", r, g, b),
         }
     }
 }
@@ -226,5 +226,5 @@ fn main() {
     let git_prompt = format_git_prompt(&git_str, &black, &git_color);
     let pwd_prompt = format_pwd_prompt(&blue, &black, &git_color, &git_prompt);
 
-    println!("{}{}{}{}{}{}", env_prompt, user_host_prompt, time_prompt, pwd_prompt, git_prompt, RESET)
+    println!("{}{}{}{}{}{} ", env_prompt, user_host_prompt, time_prompt, pwd_prompt, git_prompt, RESET)
 }
