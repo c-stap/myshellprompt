@@ -134,7 +134,7 @@ fn get_git_status() -> (String, bool) {
         ""         // Clean working directory
     };
 
-    let branch_str = format!("{} {}", branch, icon);
+    let branch_str = format!(" {} {}", branch, icon);
     let all_committed = status.is_empty();
 
     (branch_str, all_committed)
@@ -196,7 +196,7 @@ fn main() {
     let pink = Color::new(252, 167, 234);
     // let magenta = Color::new(192, 153, 255);
     let blue = Color::new(130, 170, 255);
-    let orange = Color::new(255, 150, 108);
+    // let orange = Color::new(255, 150, 108);
     let yellow = Color::new(255, 199, 119);
     let green = Color::new(195, 232, 141);
 
