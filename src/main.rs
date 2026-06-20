@@ -1,7 +1,7 @@
 use std::env;
 use std::path::Path;
 use std::process::Command;
-use std::time::{SystemTime, UNIX_EPOCH};
+use chrono::Local;
 
 const RESET: &str = "\x1b[0m";
 const RESET_BG: &str = "\x1b[49m";
@@ -71,15 +71,7 @@ fn get_user_hostname() -> String {
 }
 
 fn get_time() -> String {
-    let now = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .expect("Time went backwards")
-        .as_secs();
-
-    let hours = (now % 86400) / 3600;
-    let minutes = (now % 3600) / 60;
-
-    format!("{:02}:{:02}", hours, minutes)
+    Local::now().format("%H:%M").to_string()
 }
 
 fn get_pwd() -> String {
