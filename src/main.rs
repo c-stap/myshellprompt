@@ -163,7 +163,7 @@ fn format_user_hostname_prompt(bg_color: &Color, fg_color: &Color, next_bg_color
     let fmt_sep = format!("{}{}{}", bg_color.fg, next_bg_color.bg, RIGHT_SEMI_CIRCLE);
 
     if env_prompt == "" {
-        format!(" {}{}{}", fmt_left_semi_circle, fmt_txt, fmt_sep)
+        format!("{}{}{}", fmt_left_semi_circle, fmt_txt, fmt_sep)
     } else {
         format!(" {}{}", fmt_txt, fmt_sep)
     }
