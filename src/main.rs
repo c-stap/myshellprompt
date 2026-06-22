@@ -111,7 +111,6 @@ fn get_git_status() -> (String, bool) {
     let has_unstaged = status.lines().any(|line| {
         line.starts_with(" M") ||  // Modified, not staged
         line.starts_with(" D") ||  // Deleted, not staged
-        line.starts_with("A ") ||  // Added, staged (but this is staged, not unstaged)
         line.starts_with("??") ||  // Untracked
         line.starts_with("!!") ||  // Ignored
         line.starts_with(" R") ||  // Renamed, not staged
