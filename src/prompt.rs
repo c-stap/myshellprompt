@@ -13,20 +13,14 @@ const RESET_BG: &str = r"\e[49m";
 const LEFT_SEMI_CIRCLE: &str = "";
 const RIGHT_SEMI_CIRCLE: &str = "";
 
-fn get_reset(bash: bool) -> String {
-    if bash {
-        wrap_ansi_for_bash(RESET.to_string())
-    } else {
-        RESET.to_string()
-    }
+fn get_reset(shelltype: ShellType) -> String {
+    let reset = RESET.to_string();
+    match_ansi_to_shell(shelltype, reset)
 }
 
-fn get_reset_bg(bash: bool) -> String {
-    if bash {
-        wrap_ansi_for_bash(RESET_BG.to_string())
-    } else {
-        RESET_BG.to_string()
-    }
+fn get_reset_bg(shelltype: ShellType) -> String {
+    let reset = RESET_BG.to_string();
+    match_ansi_to_shell(shelltype, reset)
 }
 
 fn get_active_python_env() -> String {
@@ -130,11 +124,11 @@ fn get_git_status() -> (String, bool) {
     (branch_str, all_committed)
 }
 
-fn format_env_prompt(bg_color: &Color, fg_color: &Color, next_bg_color: &Color) -> String {
+fn format_env_prompt(bg_colour: &Colour, fg_colour: &Colour, next_bg_colour: &Colour) -> String {
     let env_name = get_active_python_env();
-    let fmt_left_semi_circle = format!("{}{}", bg_color.fg, LEFT_SEMI_CIRCLE);
-    let fmt_txt = format!("{}{}{}", bg_color.bg, fg_color.fg, env_name);
-    let fmt_sep = format!("{}{}{}", bg_color.fg, next_bg_color.bg, RIGHT_SEMI_CIRCLE);
+    let fmt_left_semi_circle = format!("{}{}", bg_colour.fg, LEFT_SEMI_CIRCLE);
+    let fmt_txt = format!("{}{}{}", bg_colour.bg, fg_colour.fg, env_name);
+    let fmt_sep = format!("{}{}{}", bg_colour.fg, next_bg_colour.bg, RIGHT_SEMI_CIRCLE);
 
     if env_name == "" {
         "".to_string()
@@ -144,15 +138,15 @@ fn format_env_prompt(bg_color: &Color, fg_color: &Color, next_bg_color: &Color) 
 }
 
 fn format_user_hostname_prompt(
-    bg_color: &Color,
-    fg_color: &Color,
-    next_bg_color: &Color,
+    bg_colour: &Colour,
+    fg_colour: &Colour,
+    next_bg_colour: &Colour,
     env_prompt: &str,
 ) -> String {
     let user_hostname = get_user_hostname();
-    let fmt_left_semi_circle = format!("{}{}", bg_color.fg, LEFT_SEMI_CIRCLE);
-    let fmt_txt = format!("{}{}{}", bg_color.bg, fg_color.fg, user_hostname);
-    let fmt_sep = format!("{}{}{}", bg_color.fg, next_bg_color.bg, RIGHT_SEMI_CIRCLE);
+    let fmt_left_semi_circle = format!("{}{}", bg_colour.fg, LEFT_SEMI_CIRCLE);
+    let fmt_txt = format!("{}{}{}", bg_colour.bg, fg_colour.fg, user_hostname);
+    let fmt_sep = format!("{}{}{}", bg_colour.fg, next_bg_colour.bg, RIGHT_SEMI_CIRCLE);
 
     if env_prompt == "" {
         format!("{}{}{}", fmt_left_semi_circle, fmt_txt, fmt_sep)
@@ -161,39 +155,39 @@ fn format_user_hostname_prompt(
     }
 }
 
-fn format_time_prompt(bg_color: &Color, fg_color: &Color, next_bg_color: &Color) -> String {
+fn format_time_prompt(bg_colour: &Colour, fg_colour: &Colour, next_bg_colour: &Colour) -> String {
     let time = get_time();
-    let fmt_txt = format!("{}{} {}", bg_color.bg, fg_color.fg, time);
-    let fmt_sep = format!("{}{}{}", bg_color.fg, next_bg_color.bg, RIGHT_SEMI_CIRCLE);
+    let fmt_txt = format!("{}{} {}", bg_colour.bg, fg_colour.fg, time);
+    let fmt_sep = format!("{}{}{}", bg_colour.fg, next_bg_colour.bg, RIGHT_SEMI_CIRCLE);
 
     format!(" {}{}", fmt_txt, fmt_sep)
 }
 
 fn format_pwd_prompt(
-    bg_color: &Color,
-    fg_color: &Color,
-    next_bg_color: &Color,
+    bg_colour: &Colour,
+    fg_colour: &Colour,
+    next_bg_colour: &Colour,
     git_prompt: &str,
-    bash: bool,
+    shelltype: ShellType,
 ) -> String {
     let pwd_str = get_pwd();
-    let fmt_txt = format!("{}{}{}", bg_color.bg, fg_color.fg, pwd_str);
+    let fmt_txt = format!("{}{}{}", bg_colour.bg, fg_colour.fg, pwd_str);
 
-    let reset_bg = get_reset_bg(bash);
+    let reset_bg = get_reset_bg(shelltype);
     let fmt_sep: String;
     if git_prompt == "" {
-        fmt_sep = format!("{}{}{}", bg_color.fg, reset_bg, RIGHT_SEMI_CIRCLE);
+        fmt_sep = format!("{}{}{}", bg_colour.fg, reset_bg, RIGHT_SEMI_CIRCLE);
     } else {
-        fmt_sep = format!("{}{}{}", bg_color.fg, next_bg_color.bg, RIGHT_SEMI_CIRCLE);
+        fmt_sep = format!("{}{}{}", bg_colour.fg, next_bg_colour.bg, RIGHT_SEMI_CIRCLE);
     }
     format!(" {}{}", fmt_txt, fmt_sep)
 }
 
-fn format_git_prompt(git_str: &str, fg_color: &Color, bg_color: &Color, bash: bool) -> String {
-    let fmt_txt = format!("{}{}{}", fg_color.fg, bg_color.bg, git_str);
+fn format_git_prompt(git_str: &str, fg_colour: &Colour, bg_colour: &Colour, shelltype: ShellType) -> String {
+    let fmt_txt = format!("{}{}{}", fg_colour.fg, bg_colour.bg, git_str);
 
-    let reset_bg = get_reset_bg(bash);
-    let fmt_sep = format!("{}{}{}", bg_color.fg, reset_bg, RIGHT_SEMI_CIRCLE);
+    let reset_bg = get_reset_bg(shelltype);
+    let fmt_sep = format!("{}{}{}", bg_colour.fg, reset_bg, RIGHT_SEMI_CIRCLE);
     if git_str != "" {
         format!(" {}{}", fmt_txt, fmt_sep)
     } else {
@@ -201,7 +195,7 @@ fn format_git_prompt(git_str: &str, fg_color: &Color, bg_color: &Color, bash: bo
     }
 }
 
-pub fn build_prompt(bash: bool, theme: Theme) {
+pub fn build_prompt(shelltype: ShellType, theme: Theme) {
     let git_str: String;
     let all_committed: bool;
     (git_str, all_committed) = get_git_status();
@@ -211,8 +205,8 @@ pub fn build_prompt(bash: bool, theme: Theme) {
         format_user_hostname_prompt(&theme.user_bg, &theme.user_fg, &theme.time_bg, &env_prompt);
     let time_prompt = format_time_prompt(&theme.time_bg, &theme.time_fg, &theme.pwd_bg);
 
-    let git_bg: Color;
-    let git_fg: Color;
+    let git_bg: Colour;
+    let git_fg: Colour;
     if all_committed {
         git_bg = theme.git_clean_bg;
         git_fg = theme.git_clean_fg;
@@ -221,9 +215,9 @@ pub fn build_prompt(bash: bool, theme: Theme) {
         git_fg = theme.git_fg
     }
 
-    let git_prompt = format_git_prompt(&git_str, &git_fg, &git_bg, bash);
-    let pwd_prompt = format_pwd_prompt(&theme.pwd_bg, &theme.pwd_fg, &git_bg, &git_prompt, bash);
-    let reset = get_reset(bash);
+    let git_prompt = format_git_prompt(&git_str, &git_fg, &git_bg, shelltype.clone());
+    let pwd_prompt = format_pwd_prompt(&theme.pwd_bg, &theme.pwd_fg, &git_bg, &git_prompt, shelltype.clone());
+    let reset = get_reset(shelltype.clone());
 
     println!(
         "{}{}{}{}{}{} ",

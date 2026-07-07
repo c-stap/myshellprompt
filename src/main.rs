@@ -6,13 +6,14 @@ use clap::Parser;
 
 use crate::themes::*;
 use crate::prompt::build_prompt;
+use crate::utils::ShellType;
 
 #[derive(Parser)]
 #[command(name = "myshellprompt")]
 #[command(about = "A simple prompt for bash and zsh with git and conda env integration", long_about = None)]
 struct Args {
-    #[arg(long, default_value_t = false, help = "formats prompt for BASH")]
-    bash: bool,
+    #[arg(long, value_enum, help = "select shell type")]
+    shell: Option<ShellType>,
 
     #[arg(long, value_enum)]
     theme: Option<ThemeType>,
@@ -20,16 +21,18 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
-    let mut bash_mode = false;
 
-    if args.bash {
-        bash_mode = true;
-    }
+    let shell = match args.shell {
+        Some(ShellType::Bash) => ShellType::Bash,
+        Some(ShellType::Zsh) => ShellType::Zsh,
+        Some(ShellType::None) => ShellType::None,
+        None => ShellType::None,
+    };
 
     let theme = match args.theme {
-        Some(ThemeType::Weird) => Theme::weird(bash_mode),
-        Some(ThemeType::TokyonightMoon) => Theme::tokyonight_moon(bash_mode),
-        None => Theme::tokyonight_moon(bash_mode),
+        Some(ThemeType::SanzoWada329) => Theme::sanzo_wada_329(shell.clone()),
+        Some(ThemeType::TokyonightMoon) => Theme::tokyonight_moon(shell.clone()),
+        None => Theme::tokyonight_moon(shell.clone()),
     };
-    build_prompt(bash_mode, theme);
+    build_prompt(shell, theme);
 }
