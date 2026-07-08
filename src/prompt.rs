@@ -51,7 +51,7 @@ fn get_active_python_env() -> String {
 fn get_user_hostname() -> String {
     let user = env::var("USER").unwrap_or_else(|_| "unknown".to_string());
     let hostname = env::var("HOSTNAME").unwrap_or_else(|_| "unknown".to_string());
-    format!("{}@{}", user, hostname)
+    format!(" {}@{}", user, hostname)
 }
 
 fn get_time() -> String {
@@ -62,13 +62,12 @@ fn get_pwd() -> String {
     let current_dir = env::current_dir().unwrap_or_else(|_| Path::new("unknown").to_path_buf());
     let home_dir = env::var("HOME").unwrap_or_else(|_| "unknown".to_string());
 
-    let current_dir_str = current_dir.display().to_string();
+    let mut current_dir_str = current_dir.display().to_string();
     if current_dir_str.starts_with(&home_dir) {
         let rest = &current_dir_str[home_dir.len()..];
-        format!("~{}", rest)
-    } else {
-        current_dir_str
+        current_dir_str = format!("~{}", rest);
     }
+    format!("󰝰 {}", current_dir_str)
 }
 
 fn get_git_status() -> (String, bool) {

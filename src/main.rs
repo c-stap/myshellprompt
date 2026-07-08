@@ -31,7 +31,9 @@ fn main() {
 
     let theme = match args.theme {
         Some(ThemeType::SanzoWada329) => Theme::sanzo_wada_329(shell.clone()),
+        Some(ThemeType::Greys) => Theme::greys(shell.clone()),
         Some(ThemeType::TokyonightMoon) => Theme::tokyonight_moon(shell.clone()),
+        Some(ThemeType::TokyonightRainbow) => Theme::tokyonight_rainbow(shell.clone()),
         None => Theme::tokyonight_moon(shell.clone()),
     };
     build_prompt(shell, theme);

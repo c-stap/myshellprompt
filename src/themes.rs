@@ -5,7 +5,9 @@ use crate::utils::{Colour, ShellType};
 #[derive(Clone, ValueEnum)]
 pub enum ThemeType {
     TokyonightMoon,
+    TokyonightRainbow,
     SanzoWada329,
+    Greys,
 }
 
 pub struct Theme {
@@ -45,7 +47,7 @@ impl Theme {
             pwd_bg: blue,
             git_fg: black.clone(),
             git_bg: yellow,
-            git_clean_fg: black.clone(),
+            git_clean_fg: black,
             git_clean_bg: green,
         }
     }
@@ -72,8 +74,64 @@ impl Theme {
             pwd_bg: slate_color,
             git_fg: black.clone(),
             git_bg: cream_yellow,
-            git_clean_fg: black.clone(),
+            git_clean_fg: black,
             git_clean_bg: light_green_yellow,
+        }
+    }
+
+    pub fn greys(shelltype: ShellType) -> Self {
+        let neutral_gray = Colour::new(182, 191, 193, shelltype.clone());
+        let andover_green = Colour::new(109, 126, 119, shelltype.clone());
+        // let warm_gray = Colour::new(161, 163, 154, shelltype.clone());
+        let slate_color = Colour::new(52, 69, 76, shelltype.clone());
+        // let black_sw = Colour::new(17, 19, 20, shelltype.clone());
+
+        let white = Colour::new(255, 255, 255, shelltype.clone());
+        let black = Colour::new(0, 0, 0, shelltype.clone());
+
+        let yellow = Colour::new(255, 199, 119, shelltype.clone());
+        let green = Colour::new(195, 232, 141, shelltype.clone());
+
+        Theme {
+            env_fg: black.clone(),
+            env_bg: white.clone(),
+            user_fg: black.clone(),
+            user_bg: neutral_gray,
+            time_fg: white.clone(),
+            time_bg: andover_green,
+            pwd_fg: white.clone(),
+            pwd_bg: slate_color,
+            git_fg: black.clone(),
+            git_bg: yellow,
+            git_clean_fg: black,
+            git_clean_bg: green,
+        }
+    }
+
+    pub fn tokyonight_rainbow(shelltype: ShellType) -> Self {
+        // let white = Colour::new(255, 255, 255, shelltype.clone());
+        let black = Colour::new(0, 0, 0, shelltype.clone());
+        // let pink = Colour::new(252, 167, 234, shelltype.clone());
+        let red = Colour::new(255, 117, 127, shelltype.clone());
+        let magenta = Colour::new(192, 153, 255, shelltype.clone());
+        let blue = Colour::new(130, 170, 255, shelltype.clone());
+        // let orange = Colour::new(255, 150, 108, shelltype.clone());
+        let yellow = Colour::new(255, 199, 119, shelltype.clone());
+        let green = Colour::new(195, 232, 141, shelltype.clone());
+
+        Theme {
+            env_fg: black.clone(),
+            env_bg: red,
+            user_fg: black.clone(),
+            user_bg: yellow,
+            time_fg: black.clone(),
+            time_bg: green.clone(),
+            pwd_fg: black.clone(),
+            pwd_bg: blue,
+            git_fg: black,
+            git_bg: magenta.clone(),
+            git_clean_fg: green,
+            git_clean_bg: magenta,
         }
     }
 
