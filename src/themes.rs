@@ -109,13 +109,10 @@ impl Theme {
     }
 
     pub fn tokyonight_rainbow(shelltype: ShellType) -> Self {
-        // let white = Colour::new(255, 255, 255, shelltype.clone());
         let black = Colour::new(0, 0, 0, shelltype.clone());
-        // let pink = Colour::new(252, 167, 234, shelltype.clone());
         let red = Colour::new(255, 117, 127, shelltype.clone());
         let magenta = Colour::new(192, 153, 255, shelltype.clone());
         let blue = Colour::new(130, 170, 255, shelltype.clone());
-        // let orange = Colour::new(255, 150, 108, shelltype.clone());
         let yellow = Colour::new(255, 199, 119, shelltype.clone());
         let green = Colour::new(195, 232, 141, shelltype.clone());
 
@@ -125,12 +122,12 @@ impl Theme {
             user_fg: black.clone(),
             user_bg: yellow,
             time_fg: black.clone(),
-            time_bg: green.clone(),
+            time_bg: green,
             pwd_fg: black.clone(),
             pwd_bg: blue,
-            git_fg: black,
+            git_fg: black.clone(),
             git_bg: magenta.clone(),
-            git_clean_fg: green,
+            git_clean_fg: black,
             git_clean_bg: magenta,
         }
     }
