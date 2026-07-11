@@ -16,13 +16,12 @@ pub fn wrap_ansi_for_zsh(ansi_code: String) -> String {
 }
 
 pub fn match_ansi_to_shell(shelltype: ShellType, ansi_code: String) -> String {
-     match shelltype {
+    match shelltype {
         ShellType::Bash => wrap_ansi_for_bash(ansi_code),
         ShellType::Zsh => wrap_ansi_for_zsh(ansi_code),
         ShellType::None => ansi_code,
     }
 }
-
 
 #[derive(Clone)]
 pub struct Colour {

@@ -3,8 +3,8 @@ use std::env;
 use std::path::Path;
 use std::process::Command;
 
-use crate::utils::*;
 use crate::themes::Theme;
+use crate::utils::*;
 
 const RESET: &str = r"\e[0m";
 const RESET_BG: &str = r"\e[49m";
@@ -187,7 +187,12 @@ fn format_pwd_prompt(
     format!(" {}{}", fmt_txt, fmt_sep)
 }
 
-fn format_git_prompt(git_str: &str, fg_colour: &Colour, bg_colour: &Colour, shelltype: ShellType) -> String {
+fn format_git_prompt(
+    git_str: &str,
+    fg_colour: &Colour,
+    bg_colour: &Colour,
+    shelltype: ShellType,
+) -> String {
     let fmt_txt = format!("{}{}{}", fg_colour.fg, bg_colour.bg, git_str);
 
     let reset_bg = get_reset_bg(shelltype);
@@ -199,7 +204,11 @@ fn format_git_prompt(git_str: &str, fg_colour: &Colour, bg_colour: &Colour, shel
     }
 }
 
-pub fn build_prompt(shelltype: ShellType, theme: Theme) {
+pub fn build_prompt(shelltype: ShellType, theme: Theme, error: bool) {
+    let mut error_sign = String::from("");
+    if error {
+        error_sign.push_str(" 󰯆 ")
+    }
     let git_str: String;
     let all_committed: bool;
     (git_str, all_committed) = get_git_status();
@@ -220,12 +229,18 @@ pub fn build_prompt(shelltype: ShellType, theme: Theme) {
     }
 
     let git_prompt = format_git_prompt(&git_str, &git_fg, &git_bg, shelltype.clone());
-    let pwd_prompt = format_pwd_prompt(&theme.pwd_bg, &theme.pwd_fg, &git_bg, &git_prompt, shelltype.clone());
+    let pwd_prompt = format_pwd_prompt(
+        &theme.pwd_bg,
+        &theme.pwd_fg,
+        &git_bg,
+        &git_prompt,
+        shelltype.clone(),
+    );
     let clear = get_clear(shelltype.clone());
     let reset = get_reset(shelltype);
 
     println!(
-        "{}{}{}{}{}{}{}\n 󱞪 ",
-        env_prompt, user_host_prompt, time_prompt, pwd_prompt, git_prompt, clear, reset
+        "╭─{}{}{}{}{}{}{}{}\n╰─>  ",
+        error_sign, env_prompt, user_host_prompt, time_prompt, pwd_prompt, git_prompt, clear, reset
     )
 }

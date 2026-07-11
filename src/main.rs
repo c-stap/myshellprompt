@@ -1,11 +1,11 @@
-mod themes;
 mod prompt;
+mod themes;
 pub mod utils;
 
 use clap::Parser;
 
-use crate::themes::*;
 use crate::prompt::build_prompt;
+use crate::themes::*;
 use crate::utils::ShellType;
 
 #[derive(Parser)]
@@ -17,6 +17,9 @@ struct Args {
 
     #[arg(long, value_enum)]
     theme: Option<ThemeType>,
+
+    #[arg(long)]
+    error: bool,
 }
 
 fn main() {
@@ -36,5 +39,7 @@ fn main() {
         Some(ThemeType::TokyonightRainbow) => Theme::tokyonight_rainbow(shell.clone()),
         None => Theme::tokyonight_moon(shell.clone()),
     };
-    build_prompt(shell, theme);
+
+    let error = args.error;
+    build_prompt(shell, theme, error);
 }

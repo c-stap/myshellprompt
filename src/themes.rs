@@ -131,6 +131,4 @@ impl Theme {
             git_clean_bg: magenta,
         }
     }
-
 }
-
