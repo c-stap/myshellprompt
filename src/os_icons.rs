@@ -1,5 +1,5 @@
 pub enum OperatingSystem {
-    Apple,
+    Macos,
     Windows,
     Linux,
     Alpine,
@@ -13,7 +13,7 @@ pub enum OperatingSystem {
 impl OperatingSystem {
     pub fn from_str(s: &str) -> Self {
         match s {
-            "Apple" => OperatingSystem::Apple,
+            "Macos" => OperatingSystem::Macos,
             "Windows" => OperatingSystem::Windows,
             "Linux" => OperatingSystem::Linux,
             "Alpine" => OperatingSystem::Alpine,
@@ -28,7 +28,7 @@ impl OperatingSystem {
 
 pub fn get_os_icon(os_name: OperatingSystem) -> &'static str {
     match os_name {
-        OperatingSystem::Apple => "",
+        OperatingSystem::Macos => "",
         OperatingSystem::Windows => "",
         OperatingSystem::Linux => "",
         OperatingSystem::Alpine => "",
