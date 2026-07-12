@@ -13,6 +13,8 @@ pub enum ThemeType {
 pub struct Theme {
     pub env_fg: Colour,
     pub env_bg: Colour,
+    pub os_fg: Colour,
+    pub os_bg: Colour,
     pub user_fg: Colour,
     pub user_bg: Colour,
     pub time_fg: Colour,
@@ -32,11 +34,13 @@ impl Theme {
         let pink = Colour::new(252, 167, 234, shelltype.clone());
         let magenta = Colour::new(192, 153, 255, shelltype.clone());
         let blue = Colour::new(130, 170, 255, shelltype.clone());
-        // let orange = Colour::new(255, 150, 108, shelltype.clone());
+        let slate_color = Colour::new(52, 69, 76, shelltype.clone());
         let yellow = Colour::new(255, 199, 119, shelltype.clone());
         let green = Colour::new(195, 232, 141, shelltype.clone());
 
         Theme {
+            os_fg: blue.clone(),
+            os_bg: slate_color,
             env_fg: black.clone(),
             env_bg: white,
             user_fg: black.clone(),
@@ -64,6 +68,8 @@ impl Theme {
         let black = Colour::new(0, 0, 0, shelltype.clone());
 
         Theme {
+            os_fg: white.clone(),
+            os_bg: slate_color.clone(),
             env_fg: black.clone(),
             env_bg: white.clone(),
             user_fg: black.clone(),
@@ -82,9 +88,8 @@ impl Theme {
     pub fn greys(shelltype: ShellType) -> Self {
         let neutral_gray = Colour::new(182, 191, 193, shelltype.clone());
         let andover_green = Colour::new(109, 126, 119, shelltype.clone());
-        // let warm_gray = Colour::new(161, 163, 154, shelltype.clone());
         let slate_color = Colour::new(52, 69, 76, shelltype.clone());
-        // let black_sw = Colour::new(17, 19, 20, shelltype.clone());
+        let blue = Colour::new(130, 170, 255, shelltype.clone());
 
         let white = Colour::new(255, 255, 255, shelltype.clone());
         let black = Colour::new(0, 0, 0, shelltype.clone());
@@ -93,6 +98,8 @@ impl Theme {
         let green = Colour::new(195, 232, 141, shelltype.clone());
 
         Theme {
+            os_fg: blue,
+            os_bg: slate_color.clone(),
             env_fg: black.clone(),
             env_bg: white.clone(),
             user_fg: black.clone(),
@@ -111,12 +118,15 @@ impl Theme {
     pub fn tokyonight_rainbow(shelltype: ShellType) -> Self {
         let black = Colour::new(0, 0, 0, shelltype.clone());
         let red = Colour::new(255, 117, 127, shelltype.clone());
+        let orange = Colour::new(255, 150, 108, shelltype.clone());
         let magenta = Colour::new(192, 153, 255, shelltype.clone());
         let blue = Colour::new(130, 170, 255, shelltype.clone());
         let yellow = Colour::new(255, 199, 119, shelltype.clone());
         let green = Colour::new(195, 232, 141, shelltype.clone());
 
         Theme {
+            os_fg: black.clone(),
+            os_bg: orange,
             env_fg: black.clone(),
             env_bg: red,
             user_fg: black.clone(),
