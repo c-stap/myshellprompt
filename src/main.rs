@@ -1,5 +1,6 @@
 mod prompt;
 mod themes;
+mod os_icons;
 pub mod utils;
 
 use clap::Parser;

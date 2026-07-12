@@ -1,9 +1,11 @@
 use chrono::Local;
+use os_info;
 use std::env;
 use std::path::Path;
 use std::process::Command;
 
 use crate::themes::Theme;
+use crate::os_icons;
 use crate::utils::*;
 
 const RESET: &str = r"\e[0m";
@@ -53,10 +55,19 @@ fn get_active_python_env() -> String {
     format!("{}{}", venv_str, conda_str)
 }
 
+fn get_os() -> String {
+    let info = os_info::get();
+    let os_name = format!("{}", info.os_type());
+    let os = os_icons::OperatingSystem::from_str(&os_name);
+    let os_icon = os_icons::get_os_icon(os);
+    format!("{}", os_icon)
+}
+
 fn get_user_hostname() -> String {
+    let os = get_os();
     let user = env::var("USER").unwrap_or_else(|_| "unknown".to_string());
     let hostname = env::var("HOSTNAME").unwrap_or_else(|_| "unknown".to_string());
-    format!(" {}@{}", user, hostname)
+    format!("{} {}@{}", os, user, hostname)
 }
 
 fn get_time() -> String {
