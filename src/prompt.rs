@@ -1,5 +1,4 @@
 use chrono::Local;
-use os_info;
 use std::env;
 use std::path::Path;
 use std::process::Command;
@@ -56,8 +55,7 @@ fn get_active_python_env() -> String {
 }
 
 fn get_os() -> String {
-    let info = os_info::get();
-    let os_name = info.os_type();
+    let os_name = os_icons::get_os_type();
     let os_icon = os_icons::get_os_icon(os_name);
     format!("{}", os_icon)
 }

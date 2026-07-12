@@ -6,4 +6,3 @@ edition = "2024"
 [dependencies]
 chrono = "0.4"
 clap = { version = "4", features = ["derive"] }
-os_info = "3.15"
