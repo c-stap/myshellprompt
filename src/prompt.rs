@@ -57,9 +57,8 @@ fn get_active_python_env() -> String {
 
 fn get_os() -> String {
     let info = os_info::get();
-    let os_name = format!("{}", info.os_type());
-    let os = os_icons::OperatingSystem::from_str(&os_name);
-    let os_icon = os_icons::get_os_icon(os);
+    let os_name = info.os_type();
+    let os_icon = os_icons::get_os_icon(os_name);
     format!("{}", os_icon)
 }
 
