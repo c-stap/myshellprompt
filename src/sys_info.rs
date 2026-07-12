@@ -39,7 +39,7 @@ pub fn get_os() -> String {
 pub fn get_user_hostname() -> String {
     let user = env::var("USER").unwrap_or_else(|_| "unknown".to_string());
     let hostname = env::var("HOSTNAME").unwrap_or_else(|_| "unknown".to_string());
-    format!("{}@{}", user, hostname)
+    format!(" {}@{}", user, hostname)
 }
 
 pub fn get_time() -> String {
