@@ -5,7 +5,7 @@ use crate::sys_info::*;
 const RESET: &str = r"\e[0m";
 const RESET_BG: &str = r"\e[49m";
 
-const CLEAR: &str = r"\e[K";
+// const CLEAR: &str = r"\e[K";
 
 const LEFT_SEMI_CIRCLE: &str = "";
 const RIGHT_SEMI_CIRCLE: &str = "";
@@ -21,10 +21,10 @@ fn get_reset_bg(shelltype: ShellType) -> String {
     match_ansi_to_shell(shelltype, reset)
 }
 
-fn get_clear(shelltype: ShellType) -> String {
-    let clear = CLEAR.to_string();
-    match_ansi_to_shell(shelltype, clear)
-}
+// fn get_clear(shelltype: ShellType) -> String {
+//     let clear = CLEAR.to_string();
+//     match_ansi_to_shell(shelltype, clear)
+// }
 
 fn format_env_prompt(bg_colour: &Colour, fg_colour: &Colour, next_bg_colour: &Colour) -> String {
     let env_name = get_active_python_env();
@@ -145,11 +145,11 @@ pub fn build_prompt(shelltype: ShellType, theme: Theme, error: bool) {
         &git_prompt,
         shelltype.clone(),
     );
-    let clear = get_clear(shelltype.clone());
+    // let clear = get_clear(shelltype.clone());
     let reset = get_reset(shelltype);
 
-    println!(
-        "╭─{}{}{}{}{}{}{}{}{}\n╰─>  ",
-        error_sign, env_prompt, os_prompt, user_host_prompt, time_prompt, pwd_prompt, git_prompt, clear, reset
+    print!(
+        "╭─{}{}{}{}{}{}{}{}\n╰─>  ",
+        error_sign, env_prompt, os_prompt, user_host_prompt, time_prompt, pwd_prompt, git_prompt, reset
     )
 }
